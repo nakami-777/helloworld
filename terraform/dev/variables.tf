@@ -13,6 +13,11 @@ variable "tag_name" {
   default = "helloworld_dev"
 }
 
+variable "tag_name_kebab" {
+  type    = string
+  default = "helloworld-dev"
+}
+
 variable "default_availability_zone" {
   type    = string
   default = "ap-northeast-1a"
