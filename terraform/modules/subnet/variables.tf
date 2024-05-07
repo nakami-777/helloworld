@@ -24,6 +24,10 @@ variable "public_subnet_0_cidr" {
   type = string
 }
 
+variable "public_subnet_1_cidr" {
+  type = string
+}
+
 variable "private_subnet_0_cidr" {
   type = string
 }
