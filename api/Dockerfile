@@ -9,8 +9,8 @@ RUN go mod download
 
 COPY *.go ./
 
-RUN CGO_ENABLED=0 GOOS=linux go build -o /helloworld
+RUN CGO_ENABLED=0 go build -o /helloworld
 
 EXPOSE 8080
 
-CMD ["/helloworld"]
+ENTRYPOINT [ "/helloworld" ]
