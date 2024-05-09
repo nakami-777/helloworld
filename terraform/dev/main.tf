@@ -1,3 +1,13 @@
+module "alb" {
+  source = "../modules/alb"
+
+  tag_name_kebab    = var.tag_name_kebab
+  security_group_id = module.security_group.security_group_alb_id
+  subnet_0_id       = module.subnet.public_subnet_0_id
+  subnet_1_id       = module.subnet.public_subnet_1_id
+  vpc_id            = module.vpc.vpc_0_id
+}
+
 module "vpc" {
   source = "../modules/vpc"
 
@@ -59,14 +69,4 @@ module "route_table" {
   igw_id            = module.vpc.igw_0_id
   public_subnet_id  = module.subnet.public_subnet_0_id
   private_subnet_id = module.subnet.private_subnet_0_id
-}
-
-module "alb" {
-  source = "../modules/alb"
-
-  tag_name_kebab    = var.tag_name_kebab
-  security_group_id = module.security_group.security_group_alb_id
-  subnet_0_id       = module.subnet.public_subnet_0_id
-  subnet_1_id       = module.subnet.public_subnet_1_id
-  vpc_id            = module.vpc.vpc_0_id
 }

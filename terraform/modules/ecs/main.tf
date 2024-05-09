@@ -40,74 +40,87 @@ resource "aws_iam_role_policy_attachment" "ecs_task_execution_role_policy5" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonS3FullAccess"
 }
 
-# resource "aws_ecs_cluster" "ecs_0" {
-#   name = "${var.tag_name}_ecs_0"
+resource "aws_ecs_cluster" "ecs_0" {
+  name = "${var.tag_name}_ecs_0"
 
-#   setting {
-#     name  = "containerInsights"
-#     value = "enabled"
-#   }
+  setting {
+    name  = "containerInsights"
+    value = "enabled"
+  }
 
-#   tags = {
-#     Name = "${var.tag_name}_ecs_0"
-#   }
-# }
+  tags = {
+    Name = "${var.tag_name}_ecs_0"
+  }
+}
 
-# resource "aws_ecs_cluster_capacity_providers" "ecs_cluster_capacity_provider" {
-#   cluster_name       = aws_ecs_cluster.ecs_0.name
-#   capacity_providers = ["FARGATE"]
+resource "aws_ecs_cluster_capacity_providers" "ecs_cluster_capacity_provider" {
+  cluster_name       = aws_ecs_cluster.ecs_0.name
+  capacity_providers = ["FARGATE"]
 
-#   default_capacity_provider_strategy {
-#     base              = 1
-#     weight            = 100
-#     capacity_provider = "FARGATE"
-#   }
-# }
+  default_capacity_provider_strategy {
+    base              = 1
+    weight            = 100
+    capacity_provider = "FARGATE"
+  }
+}
 
-# resource "aws_ecs_task_definition" "ecs_task_api" {
-#   family                   = "${var.tag_name}_ecs_task_api"
-#   network_mode             = "awsvpc"
-#   requires_compatibilities = ["FARGATE"]
-#   cpu                      = "256"
-#   memory                   = "512"
-#   task_role_arn            = aws_iam_role.ecs_task_execution_role.arn
-#   execution_role_arn       = aws_iam_role.ecs_task_execution_role.arn
+resource "aws_ecs_task_definition" "ecs_task_api" {
+  family                   = "${var.tag_name}_ecs_task_api"
+  network_mode             = "awsvpc"
+  requires_compatibilities = ["FARGATE"]
+  cpu                      = "256"
+  memory                   = "512"
+  task_role_arn            = aws_iam_role.ecs_task_execution_role.arn
+  execution_role_arn       = aws_iam_role.ecs_task_execution_role.arn
+  runtime_platform {
+    operating_system_family = "LINUX"
+    cpu_architecture        = "X86_64"
+  }
 
-#   container_definitions = jsonencode(
-#     [
-#       {
-#         "name" : "${var.tag_name}_ecs_task_api",
-#         "image" : var.ecr_image_api,
-#         "essentials" : true,
-#         "portMappings" : [
-#           {
-#             "containerPort" : 8080,
-#             "hostPort" : 8080,
-#             "protocol" : "tcp"
-#           }
-#         ],
-#       }
-#     ]
-#   )
-# }
+  container_definitions = jsonencode(
+    [
+      {
+        "name" : "${var.tag_name}_ecs_task_api",
+        "image" : var.ecr_image_api,
+        "essentials" : true,
+        "portMappings" : [
+          {
+            "containerPort" : 8080,
+            "hostPort" : 8080,
+            "protocol" : "tcp"
+          }
+        ],
+        "logConfiguration" : {
+          "logDriver" : "awslogs",
+          "options" : {
+            "awslogs-stream-prefix" : "ecs",
+            "awslogs-create-group" : "true",
+            "awslogs-region" : "ap-northeast-1",
+            "awslogs-group" : "/ecs/${var.tag_name}_ecs_task_api",
+          }
+        }
+      }
+    ]
+  )
+}
 
-# resource "aws_ecs_service" "ecs_service_api" {
-#   name                   = "${var.tag_name}_ecs_service_api"
-#   cluster                = aws_ecs_cluster.ecs_0.id
-#   task_definition        = aws_ecs_task_definition.ecs_task_api.arn
-#   desired_count          = 1
-#   launch_type            = "FARGATE"
-#   enable_execute_command = true
+resource "aws_ecs_service" "ecs_service_api" {
+  name                   = "${var.tag_name}_ecs_service_api"
+  cluster                = aws_ecs_cluster.ecs_0.id
+  task_definition        = aws_ecs_task_definition.ecs_task_api.arn
+  desired_count          = 1
+  launch_type            = "FARGATE"
+  enable_execute_command = true
 
-#   network_configuration {
-#     subnets          = [var.ecs_api_subnet]
-#     security_groups  = [var.ecs_security_group]
-#     assign_public_ip = false
-#   }
+  network_configuration {
+    subnets          = [var.ecs_api_subnet]
+    security_groups  = [var.ecs_security_group]
+    assign_public_ip = false
+  }
 
-#   load_balancer {
-#     target_group_arn = var.alb_tg_arn
-#     container_name   = "${var.tag_name}_ecs_task_api"
-#     container_port   = 8080
-#   }
-# }
+  load_balancer {
+    target_group_arn = var.alb_tg_arn
+    container_name   = "${var.tag_name}_ecs_task_api"
+    container_port   = 8080
+  }
+}

@@ -20,9 +20,9 @@ resource "aws_lb_target_group" "alb_target_group_0" {
     path                = "/health"
     healthy_threshold   = 3
     unhealthy_threshold = 3
-    timeout             = 5
-    interval            = 30
-    matcher             = "200"
+    timeout             = 10
+    interval            = 60
+    matcher             = 200
   }
 }
 
