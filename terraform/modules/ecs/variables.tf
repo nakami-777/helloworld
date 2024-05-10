@@ -6,7 +6,7 @@ variable "ecr_image_api" {
   type = string
 }
 
-variable "ecs_api_subnet" {
+variable "ecs_api_subnet1" {
   type = string
 }
 

@@ -19,12 +19,22 @@ resource "aws_route_table" "private" {
   }
 }
 
-resource "aws_route_table_association" "public_route_association" {
-  subnet_id      = var.public_subnet_id
+resource "aws_route_table_association" "public_subnet_1a_0_route_association" {
+  subnet_id      = var.public_subnet_1a_0_id
   route_table_id = aws_route_table.public.id
 }
 
-resource "aws_route_table_association" "private_route_association" {
-  subnet_id      = var.private_subnet_id
+resource "aws_route_table_association" "public_subnet_1c_0_route_association" {
+  subnet_id      = var.public_subnet_1c_0_id
+  route_table_id = aws_route_table.public.id
+}
+
+resource "aws_route_table_association" "private_subnet_1a_0_route_association" {
+  subnet_id      = var.private_subnet_1a_0_id
+  route_table_id = aws_route_table.private.id
+}
+
+resource "aws_route_table_association" "private_subnet_1c_0_association" {
+  subnet_id      = var.private_subnet_1c_0_id
   route_table_id = aws_route_table.private.id
 }

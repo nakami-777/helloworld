@@ -24,18 +24,18 @@ variable "public_subnet_name" {
   default = "public_subnet"
 }
 
-variable "public_subnet_0_cidr" {
+variable "public_subnet_1a_0_cidr" {
   type = string
 }
 
-variable "public_subnet_1_cidr" {
+variable "public_subnet_1c_0_cidr" {
   type = string
 }
 
-variable "private_subnet_0_cidr" {
+variable "private_subnet_1a_0_cidr" {
   type = string
 }
 
-variable "private_subnet_1_cidr" {
+variable "private_subnet_1c_0_cidr" {
   type = string
 }

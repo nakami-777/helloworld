@@ -113,7 +113,7 @@ resource "aws_ecs_service" "ecs_service_api" {
   enable_execute_command = true
 
   network_configuration {
-    subnets          = [var.ecs_api_subnet]
+    subnets          = [var.ecs_api_subnet1]
     security_groups  = [var.ecs_security_group]
     assign_public_ip = false
   }
