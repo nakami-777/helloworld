@@ -71,3 +71,10 @@ module "route_table" {
   private_subnet_1a_0_id = module.subnet.private_subnet_1a_0_id
   private_subnet_1c_0_id = module.subnet.private_subnet_1c_0_id
 }
+
+module "nat_gateway" {
+  source = "../modules/nat_gateway"
+
+  tag_name_kebab        = var.tag_name_kebab
+  public_subnet_1a_0_id = module.subnet.public_subnet_1a_0_id
+}
