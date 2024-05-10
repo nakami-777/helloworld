@@ -18,13 +18,14 @@ module "vpc" {
 module "subnet" {
   source = "../modules/subnet"
 
-  tag_name                  = var.tag_name
-  default_availability_zone = var.default_availability_zone
-  vpc_id                    = module.vpc.vpc_0_id
-  public_subnet_0_cidr      = "10.0.0.0/24"
-  public_subnet_1_cidr      = "10.0.3.0/24"
-  private_subnet_0_cidr     = "10.0.1.0/24"
-  private_subnet_1_cidr     = "10.0.2.0/24"
+  tag_name              = var.tag_name
+  availability_zone_1a  = var.availability_zone_1a
+  availability_zone_1c  = var.availability_zone_1c
+  vpc_id                = module.vpc.vpc_0_id
+  public_subnet_0_cidr  = "10.0.0.0/24"
+  public_subnet_1_cidr  = "10.0.3.0/24"
+  private_subnet_0_cidr = "10.0.1.0/24"
+  private_subnet_1_cidr = "10.0.2.0/24"
 }
 
 module "ecr" {

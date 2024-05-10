@@ -2,7 +2,11 @@ variable "tag_name" {
   type = string
 }
 
-variable "default_availability_zone" {
+variable "availability_zone_1a" {
+  type = string
+}
+
+variable "availability_zone_1c" {
   type = string
 }
 
