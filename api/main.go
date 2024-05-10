@@ -1,6 +1,7 @@
 package main
 
 import (
+	"log"
 	"net/http"
 	"os"
 
@@ -15,8 +16,13 @@ func main() {
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
 
+	resp, err := http.Get("https://official-joke-api.appspot.com/jokes/random")
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	e.GET("/", func(c echo.Context) error {
-		return c.HTML(http.StatusOK, "Hello, Docker!")
+		return c.HTML(http.StatusOK, resp.Status)
 	})
 
 	e.GET("/health", func(c echo.Context) error {
