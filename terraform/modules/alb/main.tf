@@ -1,5 +1,5 @@
-resource "aws_lb" "alb_0" {
-  name               = "${var.tag_name_kebab}-alb-0"
+resource "aws_lb" "alb_api" {
+  name               = "${var.tag_name_kebab}-alb-api"
   internal           = false
   load_balancer_type = "application"
   security_groups    = [var.security_group_id]
@@ -8,8 +8,8 @@ resource "aws_lb" "alb_0" {
   enable_deletion_protection = false
 }
 
-resource "aws_lb_target_group" "alb_target_group_0" {
-  name        = "${var.tag_name_kebab}-alb-tg-0"
+resource "aws_lb_target_group" "alb_target_group_api" {
+  name        = "${var.tag_name_kebab}-alb-tg-api"
   port        = 8080
   protocol    = "HTTP"
   vpc_id      = var.vpc_id
@@ -27,12 +27,12 @@ resource "aws_lb_target_group" "alb_target_group_0" {
 }
 
 resource "aws_lb_listener" "alb_listerner_0" {
-  load_balancer_arn = aws_lb.alb_0.arn
+  load_balancer_arn = aws_lb.alb_api.arn
   port              = "80"
   protocol          = "HTTP"
 
   default_action {
     type             = "forward"
-    target_group_arn = aws_lb_target_group.alb_target_group_0.arn
+    target_group_arn = aws_lb_target_group.alb_target_group_api.arn
   }
 }
