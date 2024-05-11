@@ -21,7 +21,7 @@ module "ecs" {
   ecr_image_api      = "654654549333.dkr.ecr.ap-northeast-1.amazonaws.com/helloworld_dev_ecr_api:latest"
   ecs_api_subnet1    = module.subnet.private_subnet_1a_0_id
   ecs_security_group = module.security_group.security_group_ecs_id
-  alb_tg_arn         = module.alb.alb_tg_api_arn
+  alb_tg_api_arn     = module.alb.alb_tg_api_arn
 }
 
 module "nat_gateway" {

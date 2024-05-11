@@ -14,6 +14,6 @@ variable "ecs_security_group" {
   type = string
 }
 
-variable "alb_tg_arn" {
+variable "alb_tg_api_arn" {
   type = string
 }

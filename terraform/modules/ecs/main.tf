@@ -119,7 +119,7 @@ resource "aws_ecs_service" "ecs_service_api" {
   }
 
   load_balancer {
-    target_group_arn = var.alb_tg_arn
+    target_group_arn = var.alb_tg_api_arn
     container_name   = "${var.tag_name}_ecs_task_api"
     container_port   = 8080
   }
