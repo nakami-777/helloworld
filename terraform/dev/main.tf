@@ -17,11 +17,14 @@ module "ecr" {
 module "ecs" {
   source = "../modules/ecs"
 
-  tag_name           = var.tag_name
-  ecr_image_api      = "654654549333.dkr.ecr.ap-northeast-1.amazonaws.com/helloworld_dev_ecr_api:latest"
-  ecs_api_subnet1    = module.subnet.private_subnet_1a_0_id
-  ecs_security_group = module.security_group.security_group_ecs_id
-  alb_tg_api_arn     = module.alb.alb_tg_api_arn
+  tag_name                 = var.tag_name
+  ecr_image_api            = "654654549333.dkr.ecr.ap-northeast-1.amazonaws.com/helloworld_dev_ecr_api:latest"
+  ecr_image_front          = "654654549333.dkr.ecr.ap-northeast-1.amazonaws.com/helloworld_dev_ecr_front:latest"
+  ecs_subnet1              = module.subnet.private_subnet_1a_0_id
+  ecs_security_group_api   = module.security_group.security_group_ecs_api_id
+  ecs_security_group_front = module.security_group.security_group_ecs_front_id
+  alb_tg_api_arn           = module.alb.alb_tg_api_arn
+  alb_tg_front_arn         = module.alb.alb_tg_front_arn
 }
 
 module "nat_gateway" {

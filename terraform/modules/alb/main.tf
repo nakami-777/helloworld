@@ -24,16 +24,15 @@ resource "aws_lb_target_group" "alb_target_group_api" {
   protocol    = "HTTP"
   vpc_id      = var.vpc_id
   target_type = "ip"
-
-  # health_check {
-  #   protocol            = "HTTP"
-  #   path                = "/health"
-  #   healthy_threshold   = 3
-  #   unhealthy_threshold = 3
-  #   timeout             = 10
-  #   interval            = 60
-  #   matcher             = 200
-  # }
+  health_check {
+    protocol            = "HTTP"
+    path                = "/health"
+    healthy_threshold   = 3
+    unhealthy_threshold = 3
+    timeout             = 10
+    interval            = 300
+    matcher             = 200
+  }
 }
 
 resource "aws_lb_target_group" "alb_target_group_front" {
@@ -42,16 +41,15 @@ resource "aws_lb_target_group" "alb_target_group_front" {
   protocol    = "HTTP"
   vpc_id      = var.vpc_id
   target_type = "ip"
-
-  # health_check {
-  #   protocol            = "HTTP"
-  #   path                = "/health"
-  #   healthy_threshold   = 3
-  #   unhealthy_threshold = 3
-  #   timeout             = 10
-  #   interval            = 60
-  #   matcher             = 200
-  # }
+  health_check {
+    protocol            = "HTTP"
+    path                = "/health"
+    healthy_threshold   = 3
+    unhealthy_threshold = 3
+    timeout             = 10
+    interval            = 300
+    matcher             = 200
+  }
 }
 
 resource "aws_lb_listener" "alb_listerner_api" {

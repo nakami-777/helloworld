@@ -10,7 +10,6 @@ import (
 )
 
 func main() {
-
 	e := echo.New()
 
 	e.Use(middleware.Logger())
@@ -35,13 +34,4 @@ func main() {
 	}
 
 	e.Logger.Fatal(e.Start(":" + httpPort))
-}
-
-// Simple implementation of an integer minimum
-// Adapted from: https://gobyexample.com/testing-and-benchmarking
-func IntMin(a, b int) int {
-	if a < b {
-		return a
-	}
-	return b
 }
