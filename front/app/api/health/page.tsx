@@ -1,3 +1,1 @@
-export default function HealthCheckPage() {
-  return <h1>HOME</h1>;
-}
+export default function HealthCheckPage() {}
