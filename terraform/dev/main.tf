@@ -37,10 +37,10 @@ module "nat_gateway" {
 module "route_table" {
   source = "../modules/route_table"
 
-  tag_name               = var.tag_name
-  vpc_id                 = module.vpc.vpc_0_id
-  igw_id                 = module.vpc.igw_0_id
-  nat_gateway_1a_0_id    = module.nat_gateway.nat_gateway_1a_0_id
+  tag_name = var.tag_name
+  vpc_id   = module.vpc.vpc_0_id
+  igw_id   = module.vpc.igw_0_id
+  # nat_gateway_1a_0_id    = module.nat_gateway.nat_gateway_1a_0_id
   public_subnet_1a_0_id  = module.subnet.public_subnet_1a_0_id
   public_subnet_1c_0_id  = module.subnet.public_subnet_1c_0_id
   private_subnet_1a_0_id = module.subnet.private_subnet_1a_0_id

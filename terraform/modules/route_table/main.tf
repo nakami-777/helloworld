@@ -19,11 +19,12 @@ resource "aws_route_table" "private" {
   }
 }
 
-resource "aws_route" "route_private_subnet_1a_0" {
-  destination_cidr_block = "0.0.0.0/0"
-  route_table_id         = aws_route_table.private.id
-  nat_gateway_id         = var.nat_gateway_1a_0_id
-}
+# nat_gatewayは高いので、コメントアウトしておく
+# resource "aws_route" "route_private_subnet_1a_0" {
+#   destination_cidr_block = "0.0.0.0/0"
+#   route_table_id         = aws_route_table.private.id
+#   nat_gateway_id         = var.nat_gateway_1a_0_id
+# }
 
 resource "aws_route_table_association" "public_subnet_1a_0_route_association" {
   subnet_id      = var.public_subnet_1a_0_id

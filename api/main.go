@@ -21,7 +21,7 @@ func main() {
 	}
 
 	e.GET("/", func(c echo.Context) error {
-		return c.HTML(http.StatusOK, resp.Status)
+		return c.HTML(http.StatusBadGateway, resp.Status)
 	})
 
 	e.GET("/health", func(c echo.Context) error {

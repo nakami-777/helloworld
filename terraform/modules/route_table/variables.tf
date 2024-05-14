@@ -10,9 +10,9 @@ variable "igw_id" {
   type = string
 }
 
-variable "nat_gateway_1a_0_id" {
-  type = string
-}
+# variable "nat_gateway_1a_0_id" {
+#   type = string
+# }
 
 variable "public_subnet_1a_0_id" {
   type = string
