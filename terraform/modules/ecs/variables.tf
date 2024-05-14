@@ -5,15 +5,26 @@ variable "tag_name" {
 variable "ecr_image_api" {
   type = string
 }
-
-variable "ecs_api_subnet" {
+variable "ecr_image_front" {
   type = string
 }
 
-variable "ecs_security_group" {
+variable "ecs_subnet1" {
   type = string
 }
 
-variable "alb_tg_arn" {
+variable "ecs_security_group_api" {
+  type = string
+}
+
+variable "ecs_security_group_front" {
+  type = string
+}
+
+variable "alb_tg_api_arn" {
+  type = string
+}
+
+variable "alb_tg_front_arn" {
   type = string
 }

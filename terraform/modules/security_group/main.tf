@@ -45,17 +45,40 @@ resource "aws_security_group" "security_group_vpce" {
   }
 }
 
-resource "aws_security_group" "security_group_ecs" {
-  name   = "${var.tag_name}_security_group_ecs"
+resource "aws_security_group" "security_group_ecs_api" {
+  name   = "${var.tag_name}_security_group_ecs_api"
   vpc_id = var.vpc_id
 
   tags = {
-    Name = "${var.tag_name}_security_group_ecs"
+    Name = "${var.tag_name}_security_group_ecs_api"
   }
 
   ingress {
     from_port   = 8080
     to_port     = 8080
+    protocol    = "tcp"
+    cidr_blocks = [var.vpc_cidr]
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+
+resource "aws_security_group" "security_group_ecs_front" {
+  name   = "${var.tag_name}_security_group_ecs_front"
+  vpc_id = var.vpc_id
+
+  tags = {
+    Name = "${var.tag_name}_security_group_ecs_front"
+  }
+
+  ingress {
+    from_port   = 3000
+    to_port     = 3000
     protocol    = "tcp"
     cidr_blocks = [var.vpc_cidr]
   }

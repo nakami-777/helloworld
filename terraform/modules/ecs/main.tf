@@ -104,6 +104,46 @@ resource "aws_ecs_task_definition" "ecs_task_api" {
   )
 }
 
+resource "aws_ecs_task_definition" "ecs_task_front" {
+  family                   = "${var.tag_name}_ecs_task_front"
+  network_mode             = "awsvpc"
+  requires_compatibilities = ["FARGATE"]
+  cpu                      = "256"
+  memory                   = "512"
+  task_role_arn            = aws_iam_role.ecs_task_execution_role.arn
+  execution_role_arn       = aws_iam_role.ecs_task_execution_role.arn
+  runtime_platform {
+    operating_system_family = "LINUX"
+    cpu_architecture        = "X86_64"
+  }
+
+  container_definitions = jsonencode(
+    [
+      {
+        "name" : "${var.tag_name}_ecs_task_front",
+        "image" : var.ecr_image_front,
+        "essentials" : true,
+        "portMappings" : [
+          {
+            "containerPort" : 3000,
+            "hostPort" : 3000,
+            "protocol" : "tcp"
+          }
+        ],
+        "logConfiguration" : {
+          "logDriver" : "awslogs",
+          "options" : {
+            "awslogs-stream-prefix" : "ecs",
+            "awslogs-create-group" : "true",
+            "awslogs-region" : "ap-northeast-1",
+            "awslogs-group" : "/ecs/${var.tag_name}_ecs_task_front",
+          }
+        }
+      }
+    ]
+  )
+}
+
 resource "aws_ecs_service" "ecs_service_api" {
   name                   = "${var.tag_name}_ecs_service_api"
   cluster                = aws_ecs_cluster.ecs_0.id
@@ -113,14 +153,35 @@ resource "aws_ecs_service" "ecs_service_api" {
   enable_execute_command = true
 
   network_configuration {
-    subnets          = [var.ecs_api_subnet]
-    security_groups  = [var.ecs_security_group]
+    subnets          = [var.ecs_subnet1]
+    security_groups  = [var.ecs_security_group_api]
     assign_public_ip = false
   }
 
   load_balancer {
-    target_group_arn = var.alb_tg_arn
+    target_group_arn = var.alb_tg_api_arn
     container_name   = "${var.tag_name}_ecs_task_api"
     container_port   = 8080
+  }
+}
+
+resource "aws_ecs_service" "ecs_service_front" {
+  name                   = "${var.tag_name}_ecs_service_front"
+  cluster                = aws_ecs_cluster.ecs_0.id
+  task_definition        = aws_ecs_task_definition.ecs_task_front.arn
+  desired_count          = 1
+  launch_type            = "FARGATE"
+  enable_execute_command = true
+
+  network_configuration {
+    subnets          = [var.ecs_subnet1]
+    security_groups  = [var.ecs_security_group_front]
+    assign_public_ip = false
+  }
+
+  load_balancer {
+    target_group_arn = var.alb_tg_front_arn
+    container_name   = "${var.tag_name}_ecs_task_front"
+    container_port   = 3000
   }
 }

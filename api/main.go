@@ -10,7 +10,6 @@ import (
 )
 
 func main() {
-
 	e := echo.New()
 
 	e.Use(middleware.Logger())
@@ -26,7 +25,7 @@ func main() {
 	})
 
 	e.GET("/health", func(c echo.Context) error {
-		return c.JSON(http.StatusOK, struct{ Status string }{Status: "OK"})
+		return c.JSON(http.StatusBadGateway, struct{ Status string }{Status: "OK"})
 	})
 
 	httpPort := os.Getenv("PORT")
@@ -35,13 +34,4 @@ func main() {
 	}
 
 	e.Logger.Fatal(e.Start(":" + httpPort))
-}
-
-// Simple implementation of an integer minimum
-// Adapted from: https://gobyexample.com/testing-and-benchmarking
-func IntMin(a, b int) int {
-	if a < b {
-		return a
-	}
-	return b
 }
