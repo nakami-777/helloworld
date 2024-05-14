@@ -21,11 +21,11 @@ func main() {
 	}
 
 	e.GET("/", func(c echo.Context) error {
-		return c.HTML(http.StatusBadGateway, resp.Status)
+		return c.HTML(http.StatusOK, resp.Status)
 	})
 
 	e.GET("/health", func(c echo.Context) error {
-		return c.JSON(http.StatusOK, struct{ Status string }{Status: "OK"})
+		return c.JSON(http.StatusBadGateway, struct{ Status string }{Status: "OK"})
 	})
 
 	httpPort := os.Getenv("PORT")
