@@ -2,6 +2,7 @@ package main
 
 import (
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
@@ -30,16 +31,79 @@ func getAlbums(c *gin.Context) {
 	c.IndentedJSON(http.StatusOK, albums)
 }
 
+func getAlbumByID(c *gin.Context) {
+	i := c.Param("id")
+	id, err := strconv.ParseUint(i, 10, 64)
+	if err != nil {
+		c.IndentedJSON(http.StatusBadRequest, gin.H{"error": "invalid id"})
+		return
+	}
+
+	for _, a := range albums {
+		if a.ID == id {
+			c.IndentedJSON(http.StatusOK, a)
+			return
+		}
+	}
+	c.IndentedJSON(http.StatusNotFound, gin.H{"error": "album not found"})
+}
+
 func postAlbums(c *gin.Context) {
 	var newAlbum album
 
 	err := c.BindJSON(&newAlbum)
 	if err != nil {
+		c.IndentedJSON(http.StatusBadRequest, gin.H{"error": "invalid request"})
 		return
 	}
 
 	albums = append(albums, newAlbum)
 	c.IndentedJSON(http.StatusCreated, newAlbum)
+}
+
+func deleteAlbumByID(c *gin.Context) {
+	i := c.Param("id")
+	id, err := strconv.ParseUint(i, 10, 64)
+	if err != nil {
+		c.IndentedJSON(http.StatusBadRequest, gin.H{"error": "invalid id"})
+		return
+	}
+
+	for i, a := range albums {
+		if a.ID == id {
+			// i番目のスライスを取得し、[i+1:]...i+1番以外すべてをappendしている
+			// :iでi番目のスライスを取得, i:でi番目以外のスライスを取得
+			albums = append(albums[:i], albums[i+1:]...)
+			c.IndentedJSON(http.StatusNoContent, nil)
+			return
+		}
+	}
+	c.IndentedJSON(http.StatusNotFound, gin.H{"error": "album not found"})
+}
+
+func putAlbumByID(c *gin.Context) {
+	i := c.Param("id")
+	id, err := strconv.ParseUint(i, 10, 64)
+	if err != nil {
+		c.IndentedJSON(http.StatusBadRequest, gin.H{"error": "invalid id"})
+		return
+	}
+
+	var newAlbum album
+	err = c.BindJSON(&newAlbum)
+	if err != nil {
+		c.IndentedJSON(http.StatusBadRequest, gin.H{"error": "invalid request"})
+		return
+	}
+
+	for i, a := range albums {
+		if a.ID == id {
+			albums[i] = newAlbum
+			c.IndentedJSON(http.StatusOK, newAlbum)
+			return
+		}
+	}
+	c.IndentedJSON(http.StatusNotFound, gin.H{"error": "album not found"})
 }
 
 func main() {
@@ -49,7 +113,10 @@ func main() {
 	{
 		v1.GET("/health", healthCheck)
 		v1.GET("/albums", getAlbums)
+		v1.GET("/albums/:id", getAlbumByID)
 		v1.POST("/albums", postAlbums)
+		v1.PUT("/albums/:id", putAlbumByID)
+		v1.DELETE("/albums/:id", deleteAlbumByID)
 	}
 
 	err := router.Run(":8080")
