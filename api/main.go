@@ -1,37 +1,59 @@
 package main
 
 import (
-	"log"
 	"net/http"
-	"os"
 
-	"github.com/labstack/echo/v4"
-	"github.com/labstack/echo/v4/middleware"
+	"github.com/gin-gonic/gin"
 )
 
-func main() {
-	e := echo.New()
+type album struct {
+	ID     uint64  `json:"id"`
+	Title  string  `json:"title"`
+	Artist string  `json:"artist"`
+	Price  float64 `json:"price"`
+}
 
-	e.Use(middleware.Logger())
-	e.Use(middleware.Recover())
+// スライスでアルバムを保持
+var albums = []album{
+	{ID: 1, Title: "title1", Artist: "artist1", Price: 1000},
+	{ID: 2, Title: "title2", Artist: "artist2", Price: 2000},
+	{ID: 3, Title: "title3", Artist: "artist3", Price: 3000},
+	{ID: 4, Title: "title4", Artist: "artist4", Price: 4000},
+	{ID: 5, Title: "title5", Artist: "artist5", Price: 5000},
+}
 
-	resp, err := http.Get("https://official-joke-api.appspot.com/jokes/random")
+func healthCheck(c *gin.Context) {
+	c.IndentedJSON(http.StatusOK, gin.H{"status": "ok"})
+}
+
+func getAlbums(c *gin.Context) {
+	c.IndentedJSON(http.StatusOK, albums)
+}
+
+func postAlbums(c *gin.Context) {
+	var newAlbum album
+
+	err := c.BindJSON(&newAlbum)
 	if err != nil {
-		log.Fatal(err)
+		return
 	}
 
-	e.GET("/", func(c echo.Context) error {
-		return c.HTML(http.StatusOK, resp.Status)
-	})
+	albums = append(albums, newAlbum)
+	c.IndentedJSON(http.StatusCreated, newAlbum)
+}
 
-	e.GET("/health", func(c echo.Context) error {
-		return c.JSON(http.StatusBadGateway, struct{ Status string }{Status: "OK"})
-	})
+func main() {
+	router := gin.Default()
 
-	httpPort := os.Getenv("PORT")
-	if httpPort == "" {
-		httpPort = "8080"
+	v1 := router.Group("/v1")
+	{
+		v1.GET("/health", healthCheck)
+		v1.GET("/albums", getAlbums)
+		v1.POST("/albums", postAlbums)
 	}
 
-	e.Logger.Fatal(e.Start(":" + httpPort))
+	err := router.Run(":8080")
+	if err != nil {
+		panic("[Error] failed to start Gin server due to" + err.Error())
+	}
 }

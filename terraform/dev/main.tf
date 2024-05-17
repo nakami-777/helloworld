@@ -27,11 +27,15 @@ module "ecs" {
   alb_tg_front_arn         = module.alb.alb_tg_front_arn
 }
 
-module "nat_gateway" {
-  source = "../modules/nat_gateway"
+module "nat" {
+  source = "../modules/nat"
 
-  tag_name_kebab        = var.tag_name_kebab
-  public_subnet_1a_0_id = module.subnet.public_subnet_1a_0_id
+  tag_name_kebab              = var.tag_name_kebab
+  public_subnet_1a_0_id       = module.subnet.public_subnet_1a_0_id
+  vpc_id                      = module.vpc.vpc_0_id
+  public_subnet               = module.subnet.public_subnet_1a_0_id
+  private_subnets_cidr_blocks = [module.subnet.private_subnet_1a_0_cidr]
+  private_route_table_ids     = [module.route_table.route_table_private_id]
 }
 
 module "route_table" {
