@@ -23,6 +23,15 @@ var albums = []album{
 	{ID: 5, Title: "title5", Artist: "artist5", Price: 5000},
 }
 
+func idParseUint(c *gin.Context) (id uint64) {
+	i := c.Param("id")
+	id, err := strconv.ParseUint(i, 10, 64)
+	if err != nil {
+		c.IndentedJSON(http.StatusBadRequest, gin.H{"error": "invalid id"})
+	}
+	return
+}
+
 func healthCheck(c *gin.Context) {
 	c.IndentedJSON(http.StatusOK, gin.H{"status": "ok"})
 }
@@ -32,12 +41,7 @@ func getAlbums(c *gin.Context) {
 }
 
 func getAlbumByID(c *gin.Context) {
-	i := c.Param("id")
-	id, err := strconv.ParseUint(i, 10, 64)
-	if err != nil {
-		c.IndentedJSON(http.StatusBadRequest, gin.H{"error": "invalid id"})
-		return
-	}
+	id := idParseUint(c)
 
 	for _, a := range albums {
 		if a.ID == id {
@@ -62,12 +66,7 @@ func postAlbums(c *gin.Context) {
 }
 
 func deleteAlbumByID(c *gin.Context) {
-	i := c.Param("id")
-	id, err := strconv.ParseUint(i, 10, 64)
-	if err != nil {
-		c.IndentedJSON(http.StatusBadRequest, gin.H{"error": "invalid id"})
-		return
-	}
+	id := idParseUint(c)
 
 	for i, a := range albums {
 		if a.ID == id {
@@ -82,15 +81,10 @@ func deleteAlbumByID(c *gin.Context) {
 }
 
 func putAlbumByID(c *gin.Context) {
-	i := c.Param("id")
-	id, err := strconv.ParseUint(i, 10, 64)
-	if err != nil {
-		c.IndentedJSON(http.StatusBadRequest, gin.H{"error": "invalid id"})
-		return
-	}
+	id := idParseUint(c)
 
 	var newAlbum album
-	err = c.BindJSON(&newAlbum)
+	err := c.BindJSON(&newAlbum)
 	if err != nil {
 		c.IndentedJSON(http.StatusBadRequest, gin.H{"error": "invalid request"})
 		return
