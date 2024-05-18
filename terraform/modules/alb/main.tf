@@ -26,7 +26,7 @@ resource "aws_lb_target_group" "alb_target_group_api" {
   target_type = "ip"
   health_check {
     protocol            = "HTTP"
-    path                = "/health"
+    path                = "/v1/health"
     healthy_threshold   = 3
     unhealthy_threshold = 3
     timeout             = 10
