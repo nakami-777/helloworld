@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"strconv"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
 
@@ -102,6 +103,33 @@ func putAlbumByID(c *gin.Context) {
 
 func main() {
 	router := gin.Default()
+
+	router.Use(
+		cors.New(
+			cors.Config{
+				AllowOrigins: []string{
+					"http://localhost:3000",
+					"http://helloworld-dev-alb-front-1863607102.ap-northeast-1.elb.amazonaws.com",
+				},
+				AllowMethods: []string{
+					"GET",
+					"PUT",
+					"POST",
+					"DELETE",
+					"OPTIONS",
+				},
+				AllowHeaders: []string{
+					"Access-Control-Allow-Credentials",
+					"Access-Control-Allow-Headers",
+					"Content-Type",
+					"Content-Length",
+					"Accept-Encoding",
+					"Authorization",
+				},
+				AllowCredentials: true,
+			},
+		),
+	)
 
 	v1 := router.Group("/v1")
 	{
