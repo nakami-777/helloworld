@@ -1,8 +1,7 @@
 "use client";
 
 import axios from "axios";
-import { headers } from "next/headers";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 interface Album {
   id: number;
@@ -14,16 +13,16 @@ interface Album {
 function Home() {
   const [albums, setAlbums] = useState<Album[]>([]);
 
+  const fetchData = useMemo(async () => {
+    const res = await axios.get(
+      "http://helloworld-dev-alb-api-2082722876.ap-northeast-1.elb.amazonaws.com/v1/albums"
+    );
+    setAlbums(res.data);
+  }, []);
+
   useEffect(() => {
-    const fetchData = async () => {
-      // const res = await axios.get(
-      //   "http://helloworld-dev-alb-api-2082722876.ap-northeast-1.elb.amazonaws.com/v1/albums"
-      // );
-      const res = await axios.get("http://localhost:8080/v1/albums");
-      setAlbums(res.data);
-    };
-    fetchData();
-  });
+    fetchData;
+  }, [albums]);
 
   return (
     <div>
